@@ -5,6 +5,7 @@ import logging
 import pathlib
 import sys
 
+from pymodbus.framer.solarmanv5_framer import ModbusSolarmanv5Framer
 
 try:
     import click
@@ -316,7 +317,7 @@ def main(
     "--framer",
     default="tcp",
     type=str,
-    help="Override the default packet framer tcp|rtu",
+    help="Override the default packet framer tcp|rtu|solarman"
 )
 def tcp(ctx, host, port, framer):
     """Define TCP."""
@@ -324,6 +325,8 @@ def tcp(ctx, host, port, framer):
     kwargs.update(**ctx.obj)
     if framer == "rtu":
         kwargs["framer"] = ModbusRtuFramer
+    elif framer == "solarman":
+        kwargs["framer"] = ModbusSolarmanv5Framer
     client = ModbusTcpClient(**kwargs)
     cli(client)
 
